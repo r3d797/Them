@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>متجر مثل الفيديو - تحسين التصميم</title>
+<style>
+  /* الخط العام */
+  body {
+    font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #fafafa;
+    margin: 0;
+    padding: 20px;
+    color: #2c3e50;
+    direction: rtl;
+  }
+
+  h1 {
+    text-align: center;
+    font-weight: 800;
+    margin-bottom: 40px;
+    color: #34495e;
+    letter-spacing: 1.5px;
+    font-size: 2.2rem;
+  }
+
+  /* شبكة المنتجات */
+  .products {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(240px,1fr));
+    gap: 30px;
+  }
+
+  /* كل منتج */
+  .product {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.07);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+  }
+  .product:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 14px 30px rgba(0,0,0,0.12);
+  }
+
+  /* صورة المنتج */
+  .product img {
+    width: 190px;
+    height: 190px;
+    object-fit: cover;
+    border-radius: 16px;
+    margin-bottom: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+  }
+  .product:hover img {
+    transform: scale(1.05);
+  }
+
+  /* اسم المنتج */
+  .product h3 {
+    font-size: 1.3rem;
+    margin: 10px 0 10px;
+    color: #2c3e50;
+  }
+
+  /* سعر المنتج */
+  .product p {
+    color: #e67e22;
+    font-weight: 900;
+    font-size: 1.15rem;
+    margin: 0 0 20px;
+  }
+
+  /* زر إضافة للسلة */
+  button {
+    background-color: #e67e22;
+    border: none;
+    color: white;
+    padding: 12px 26px;
+    font-weight: 900;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 5px 12px rgba(230, 126, 34, 0.5);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  button:hover {
+    background-color: #cf7119;
+    box-shadow: 0 8px 18px rgba(207, 113, 25, 0.7);
+  }
+
+  /* سلة التسوق */
+  .cart {
+    margin-top: 50px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.07);
+    padding: 25px 30px;
+  }
+  .cart h2 {
+    font-weight: 800;
+    margin-top: 0;
+    margin-bottom: 25px;
+    color: #34495e;
+    letter-spacing: 1.2px;
+    font-size: 1.8rem;
+  }
+
+  /* عناصر السلة */
+  .cart-items {
+    max-height: 280px;
+    overflow-y: auto;
+    margin-bottom: 25px;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    padding: 12px 0;
+  }
+  .cart-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-weight: 700;
+    color: #34495e;
+  }
+  .cart-item:last-child {
+    border-bottom: none;
+  }
+  .cart-item span:last-child {
+    color: #e67e22;
+  }
+
+  /* السعر الإجمالي */
+  .total {
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: #e67e22;
+    text-align: right;
+  }
+
+  /* تصميم متجاوب للجوال */
+  @media (max-width: 600px) {
+    body {
+      padding: 12px 15px;
+    }
+    .products {
+      grid-template-columns: repeat(auto-fill,minmax(160px,1fr));
+      gap: 20px;
+    }
+    .product img {
+      width: 160px;
+      height: 160px;
+    }
+    button {
+      padding: 10px 18px;
+      font-size: 1rem;
+    }
+  }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <h1>متجر مثل الفيديو</h1>
+
+  <div class="products" id="products"></div>
+
+  <div class="cart" id="cart">
+    <h2>سلة التسوق</h2>
+    <div class="cart-items" id="cart-items">لا يوجد منتجات في السلة.</div>
+    <div class="total" id="total-price"></div>
+  </div>
+
+<script>
+  const products = [
+    {id: 1, name: "كريم ترطيب", price: 55, image: "https://via.placeholder.com/180?text=كريم+ترطيب"},
+    {id: 2, name: "صابون طبيعي", price: 30, image: "https://via.placeholder.com/180?text=صابون+طبيعي"},
+    {id: 3, name: "زيت عطري", price: 45, image: "https://via.placeholder.com/180?text=زيت+عطري"},
+    {id: 4, name: "مصل فيتامين", price: 90, image: "https://via.placeholder.com/180?text=مصل+فيتامين"}
+  ];
+
+  let cart = [];
+
+  function displayProducts() {
+    const container = document.getElementById("products");
+    container.innerHTML = "";
+    products.forEach(p => {
+      const prod = document.createElement("div");
+      prod.className = "product";
+      prod.innerHTML = `
+        <img src="${p.image}" alt="${p.name}" />
+        <h3>${p.name}</h3>
+        <p>${p.price} ريال</p>
+        <button onclick="addToCart(${p.id})">أضف للسلة</button>
+      `;
+      container.appendChild(prod);
+    });
+  }
+
+  function addToCart(id) {
+    const product = products.find(p => p.id === id);
+    const found = cart.find(item => item.id === id);
+    if (found) {
+      found.qty++;
+    } else {
+      cart.push({...product, qty: 1});
+    }
+    displayCart();
+  }
+
+  function displayCart() {
+    const cartItems = document.getElementById("cart-items");
+    const totalPrice = document.getElementById("total-price");
+
+    if (cart.length === 0) {
+      cartItems.innerHTML = "لا يوجد منتجات في السلة.";
+      totalPrice.innerHTML = "";
+      return;
+    }
+
+    cartItems.innerHTML = "";
+    let total = 0;
+    cart.forEach(item => {
+      total += item.price * item.qty;
+      const div = document.createElement("div");
+      div.className = "cart-item";
+      div.innerHTML = `
+        <span>${item.name} (x${item.qty})</span>
+        <span>${item.price * item.qty} ريال</span>
+      `;
+      cartItems.appendChild(div);
+    });
+
+    totalPrice.innerHTML = `الإجمالي: ${total} ريال`;
+  }
+
+  window.onload = () => {
+    displayProducts();
+    displayCart();
+  }
+</script>
+
+</body>
+</html>
